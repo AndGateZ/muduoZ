@@ -25,7 +25,7 @@ struct Resource{
     Resource():consumerPos(0),producerPos(0){}
 };
 
-/*
+
 //thread风格
 //生产者行为：如果缓冲区满，等待自己被消费者唤醒；生产，index++；唤醒消费者
 void producer(Resource& resource){
@@ -101,11 +101,11 @@ int main(){
     consumer4.join();
 
     return 0;
-}*/
+}
 
 
 
-
+/*
 //pthread风格
 //生产者行为：如果缓冲区满，等待自己被消费者唤醒；生产，index++；唤醒消费者
 void* producer(void* obj){
@@ -190,3 +190,4 @@ int main(){
 
     return 0;
 }
+*/

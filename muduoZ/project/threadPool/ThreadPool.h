@@ -53,7 +53,7 @@ class ThreadPool{
             //2 用packaged_task包裹func，创建一个任务的智能指针                
             //decltype(func(args...))():fun的输入输出类型，注意上面bind直接绑定了所有参数，所以输入参数是空的
             //不能拆开，只能这么写，(fun)初始化packaged_task，make_shared是一个函数，返回智能指针
-            auto taskPtr = std::make_shared<  std::packaged_task<decltype(func(args...))()>  >(fun);
+            auto taskPtr = std::make_shared< std::packaged_task<decltype(func(args...))()> >(fun);
             //3 创建一个function warpper,将任务指针用function<void>包裹，线程会从队列中拆箱，运行内部指针指向的函数
             std::function<void()> funWarpper = [taskPtr](){ (*taskPtr)();  }; 
             //4 将function<void>放进任务队列,会不会存在退出作用域 funWarpper被析构的情况？
