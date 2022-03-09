@@ -2,7 +2,7 @@
 #define _MUDUOZ_BASE_FIXEDBUFFER_
 
 #include <string.h>
-#include "uncopyable.h"
+#include "muduoZ/base/uncopyable.h"
 
 namespace muduoZ{
 

@@ -5,12 +5,12 @@
 #include<string>
 #include<memory>
 
-#include"uncopyable.h"
-#include"FixedBuffer.h"
-#include"Thread.h"
-#include"Mutex.h"
-#include"Condition.h"
-#include"CountDownLatch.h"
+#include"muduoZ/base/uncopyable.h"
+#include"muduoZ/base/FixedBuffer.h"
+#include"muduoZ/base/Thread.h"
+#include"muduoZ/base/Mutex.h"
+#include"muduoZ/base/Condition.h"
+#include"muduoZ/base/CountDownLatch.h"
 
 namespace muduoZ{
 
@@ -21,7 +21,7 @@ public:
     typedef std::vector<BufferPtr> BufferVector;
     
     //默认参数
-    explicit AsyncLogging(const char* logFileName,size_t rollSize,int interval = 10);
+    explicit AsyncLogging(const char* logFileName,size_t rollSize,int interval = 3);
     ~AsyncLogging();
     void append(const char* msg,size_t len);
     void start();//thread.start

@@ -1,5 +1,5 @@
-#include"AsyncLogging.h"
-#include"LogFile.h"
+#include"muduoZ/base/AsyncLogging.h"
+#include"muduoZ/base/LogFile.h"
 
 
 namespace muduoZ{
@@ -104,9 +104,9 @@ void AsyncLogging::run(){
             bufferBack2->resetCur();
         }
         bufferBackVec.clear();
-        //flush
+        output.flush();
     }
-    //flush
+    output.flush();
 }
 
 }

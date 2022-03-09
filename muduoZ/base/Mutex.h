@@ -3,7 +3,7 @@
 
 #include<pthread.h>
 
-#include"uncopyable.h"
+#include"muduoZ/base/uncopyable.h"
 
 namespace muduoZ{
 

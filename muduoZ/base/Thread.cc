@@ -1,7 +1,6 @@
 #include <assert.h>
-#include"Thread.h"
-#include"CurrentThread.h"
-
+#include"muduoZ/base/Thread.h"
+#include"muduoZ/base/CurrentThread.h"
 
 namespace muduoZ{
 
