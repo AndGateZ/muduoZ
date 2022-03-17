@@ -54,6 +54,6 @@ TimerWheels的tick()分为三个步骤：
   - epollwait的延迟：每poll一次平均延迟100us  
   - 1000次tick：100us*1000=误差0.1s  
   - 一次1s的定时：误差0.1s  
-  - 10次1s定时：大概率出现一次1s的误差
+  - 10次1s定时：大概率出现一次1s的误差  
 结论：epoll的timeout为1ms将造成较大误差，因此将timeout设定为1s，能有效避免误差
 
