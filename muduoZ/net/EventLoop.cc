@@ -11,6 +11,9 @@
 namespace muduoZ{
 
 namespace net{
+
+typedef std::shared_ptr<Timer> TimerPtr;
+
 __thread EventLoop* t_loopInThisThread = NULL;
 
 
@@ -29,7 +32,8 @@ EventLoop::EventLoop()
 	callingPendingFunctors_(false),
 	quit_(false),
 	looping_(false),
-	threadId_(CurrentThread::tid())
+	threadId_(CurrentThread::tid()),
+	timerWheels_(this)
 	{
 		if (t_loopInThisThread){
 			//muduoZ::LOG<<
@@ -39,7 +43,7 @@ EventLoop::EventLoop()
 		}
 		wakeupChannel_->setCallBackRead(std::bind(&EventLoop::handleRead,this));//这里无需绑定参数，因为调用的时候有参数
 		wakeupChannel_->enableReadEvent();
-		muduoZ::LOG<<"EventPoll start";
+		//muduoZ::LOG<<"EventPoll start";
 	}
 
 EventLoop::~EventLoop(){
@@ -53,13 +57,13 @@ void EventLoop::loop(){
 	quit_ = false;
 	while(!quit_){
 		activeChannels_.clear();
-		TimeStamp now = epoller_->poll(kPollTimeMs,activeChannels_);//kPollTimeMs阻塞，10s必定唤醒一次，与事件无关
-		muduoZ::LOG<<"poll";
+		TimeStamp now = epoller_->poll(kPollTimeMs,activeChannels_);//kPollTimeMs阻塞，1s必定唤醒一次，与事件无关
 		for(Channel* channel:activeChannels_){
 			currentActiveChannel_ = channel;
 			currentActiveChannel_->handleEvent(now);
 		}
 		currentActiveChannel_ = NULL;
+		timerWheels_.tick();
 		doPendingFunctions();
 	}
 	looping_ = false;
@@ -99,7 +103,6 @@ bool EventLoop::isInLoopThread(){
 	return threadId_ == CurrentThread::tid();
 }
 
-
 void EventLoop::doPendingFunctions(){
 	std::vector<Function> functions;
 	callingPendingFunctors_ = true;
@@ -110,12 +113,24 @@ void EventLoop::doPendingFunctions(){
 	for(const Function& f:functions) f();
 }
 
+TimerPtr EventLoop::runAt(TimeStamp time,TimerReachFunction func){
+	return timerWheels_.addTimer(time,std::move(func),0);
+}
+
+TimerPtr EventLoop::runAfter(size_t milliSecond,TimerReachFunction func){
+	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),0);
+}
+
+TimerPtr EventLoop::runEvery(size_t milliSecond,TimerReachFunction func){
+	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),milliSecond);
+}
+
 void EventLoop::wakeup(){
 	uint64_t t = 0;
 	ssize_t n = Socket::write(wakeupFd_,&t,sizeof(t));
-	muduoZ::LOG<<"wakeup write complete";
+	//muduoZ::LOG<<"wakeup write complete";
 	if(n<sizeof(t)) {
-		muduoZ::LOG<<"wakeup failed";
+		//muduoZ::LOG<<"wakeup failed";
 	}
 }
 

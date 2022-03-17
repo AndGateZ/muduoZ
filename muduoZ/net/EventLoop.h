@@ -8,7 +8,8 @@
 #include "muduoZ/base/uncopyable.h"
 #include "muduoZ/base/TimeStamp.h"
 #include "muduoZ/base/Mutex.h"
-
+#include "muduoZ/net/timer/TimerWheel.h"
+#include "muduoZ/net/timer/Timer.h"
 
 namespace muduoZ{
 
@@ -21,6 +22,8 @@ class Socket;
 class EventLoop:uncopyable{
 public:
 	typedef std::function<void()> Function;
+	typedef std::shared_ptr<Timer> TimerPtr;
+	typedef std::function<void()> TimerReachFunction;
 	EventLoop();
 	~EventLoop();
 
@@ -36,9 +39,9 @@ public:
 	void doPendingFunctions();
 
 	//定时任务
-	void runAt();
-	void runAfter();
-	void runEvery();
+	TimerPtr runAt(TimeStamp time,TimerReachFunction func);
+	TimerPtr runAfter(size_t milliSecond,TimerReachFunction func);
+	TimerPtr runEvery(size_t milliSecond,TimerReachFunction func);
 	void cancel();
 
 	//wakeupchannel唤醒
@@ -52,7 +55,7 @@ private:
 
 	//poller,唯一持有
 	std::unique_ptr<Epoller> epoller_;
-	static const int kPollTimeMs = 10000;
+	static const int kPollTimeMs = 1;
 
 	//wakeup，唯一持有
 	int wakeupFd_;
@@ -69,7 +72,7 @@ private:
 	bool looping_;
 
 	//定时器
-
+	TimerWheels timerWheels_;
 
 	//任务队列
 	std::vector<Function> pendingFunctions_;

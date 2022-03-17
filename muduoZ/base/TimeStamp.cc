@@ -39,12 +39,29 @@ TimeStamp TimeStamp::addTime(double second){
 	return newTimeStamp;
 }
 
+TimeStamp TimeStamp::addTime(size_t milliSecond){
+	TimeStamp newTimeStamp(static_cast<int64_t>(microSecondsSinceEpoch_+milliSecond*kMillisecondsPerSecond));
+	return newTimeStamp;
+}
 
 TimeStamp TimeStamp::now(){
 	struct timeval tv;
 	gettimeofday(&tv, NULL);//系统调用，把当前的时间信息放进tv中，第二个参数是当地时区信息
 	int64_t seconds = tv.tv_sec;
 	return TimeStamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
+}
+
+TimeStamp TimeStamp::invalid(){
+	return TimeStamp();
+}
+
+size_t TimeStamp::timeDiffInMillSeconds(TimeStamp t1,TimeStamp t2){
+	if(t1>t2){
+		return (t1.getMicroSecondsSinceEpoch()-t2.getMicroSecondsSinceEpoch())/kMillisecondsPerSecond;
+	}
+	else{
+		return (t2.getMicroSecondsSinceEpoch()-t1.getMicroSecondsSinceEpoch())/kMillisecondsPerSecond;
+	}
 }
 
 }

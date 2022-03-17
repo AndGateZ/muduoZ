@@ -42,7 +42,8 @@ void Logger::Impl::formatTime(){
     time = tv.tv_sec;
     struct tm* p_time = localtime(&time);   
     strftime(str_t, 26, "%Y-%m-%d %H:%M:%S  ", p_time);
-    stream_ << str_t;
+    stream_ << str_t<<tv.tv_usec<<" ";
+	//stream_ << str_t;
 }
 
 }

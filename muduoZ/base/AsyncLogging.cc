@@ -72,7 +72,7 @@ void AsyncLogging::run(){
             MutexLockGuard lock(mutex_);//处理前端两个buffer以及buffer数组的锁
             
             if(bufferVector_.empty()) cond_.waitForSeconds(interval_);
-            bufferVector_.swap(bufferVector_);//直接交换前后的vector
+            bufferBackVec.swap(bufferVector_);//直接交换前后的vector
             bufferBackVec.push_back(std::move(bufferCurrent_));//不用考虑currentBuffer有没有数据
             bufferCurrent_ = move(bufferBack1);
             bufferCurrent_->resetCur();//重置写入位置
