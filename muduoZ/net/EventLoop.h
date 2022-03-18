@@ -39,10 +39,10 @@ public:
 	void doPendingFunctions();
 
 	//定时任务
-	TimerPtr runAt(TimeStamp time,TimerReachFunction func);
-	TimerPtr runAfter(size_t milliSecond,TimerReachFunction func);
-	TimerPtr runEvery(size_t milliSecond,TimerReachFunction func);
-	void cancel();
+	// TimerPtr runAt(TimeStamp time,TimerReachFunction func);
+	// TimerPtr runAfter(size_t milliSecond,TimerReachFunction func);
+	// TimerPtr runEvery(size_t milliSecond,TimerReachFunction func);
+	// void cancelTimer(TimerPtr timer);
 
 	//wakeupchannel唤醒
 	void wakeup();
@@ -70,9 +70,6 @@ private:
 	bool callingPendingFunctors_;//是否正在执行任务队列的函数，用于判断queueInLoop的wakeup
 	bool quit_;//用于控制loop结束
 	bool looping_;
-
-	//定时器
-	TimerWheels timerWheels_;
 
 	//任务队列
 	std::vector<Function> pendingFunctions_;

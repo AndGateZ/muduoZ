@@ -50,10 +50,11 @@ TimerWheels的tick()分为三个步骤：
    - muduo loop线程：添加timer的过程为两个小根堆的插入，时间复杂度为O(logn)
    - 本项目 loop线程：直接把指针插入列表，时间复杂度为O(1)
 - 误差分析：  
-当设定epoll的timeout为1ms：
-  - epollwait的延迟：每poll一次平均延迟100us  
-  - 1000次tick：100us*1000=误差0.1s  
-  - 一次1s的定时：误差0.1s  
-  - 10次1s定时：大概率出现一次1s的误差
+设定tick为1ms：
+  - usleep的误差：设定1ms，每sleep一次平均滞后50us  
+  - 1000次tick：50us*1000=误差0.05s
+  - 一次1s的定时：误差0.05s，20次定时会出现一次1s的误差
+  - 20次1s定时：大概率出现一次1s的误差  
+  
 结论：epoll的timeout为1ms将造成较大误差，因此将timeout设定为1s，能有效避免误差
 

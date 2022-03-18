@@ -16,7 +16,6 @@ typedef std::shared_ptr<Timer> TimerPtr;
 
 __thread EventLoop* t_loopInThisThread = NULL;
 
-
 int createEventFd(){
 	int eventFd = ::eventfd(0,EFD_NONBLOCK | EFD_CLOEXEC);
 	return eventFd;
@@ -32,8 +31,7 @@ EventLoop::EventLoop()
 	callingPendingFunctors_(false),
 	quit_(false),
 	looping_(false),
-	threadId_(CurrentThread::tid()),
-	timerWheels_(this)
+	threadId_(CurrentThread::tid())
 	{
 		if (t_loopInThisThread){
 			//muduoZ::LOG<<
@@ -63,7 +61,6 @@ void EventLoop::loop(){
 			currentActiveChannel_->handleEvent(now);
 		}
 		currentActiveChannel_ = NULL;
-		timerWheels_.tick();
 		doPendingFunctions();
 	}
 	looping_ = false;
@@ -113,17 +110,21 @@ void EventLoop::doPendingFunctions(){
 	for(const Function& f:functions) f();
 }
 
-TimerPtr EventLoop::runAt(TimeStamp time,TimerReachFunction func){
-	return timerWheels_.addTimer(time,std::move(func),0);
-}
+// TimerPtr EventLoop::runAt(TimeStamp time,TimerReachFunction func){
+// 	return timerWheels_.addTimer(time,std::move(func),0);
+// }
 
-TimerPtr EventLoop::runAfter(size_t milliSecond,TimerReachFunction func){
-	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),0);
-}
+// TimerPtr EventLoop::runAfter(size_t milliSecond,TimerReachFunction func){
+// 	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),0);
+// }
 
-TimerPtr EventLoop::runEvery(size_t milliSecond,TimerReachFunction func){
-	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),milliSecond);
-}
+// TimerPtr EventLoop::runEvery(size_t milliSecond,TimerReachFunction func){
+// 	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),milliSecond);
+// }
+
+// void EventLoop::cancelTimer(TimerPtr timer){
+
+// }
 
 void EventLoop::wakeup(){
 	uint64_t t = 0;

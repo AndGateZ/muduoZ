@@ -10,6 +10,7 @@
 #include "muduoZ/base/uncopyable.h"
 #include "muduoZ/base/TimeStamp.h"
 #include "muduoZ/base/Logger.h"
+#include "muduoZ/base/Mutex.h"
 #include "muduoZ/net/timer/Timer.h"
 
 namespace muduoZ{
@@ -69,7 +70,7 @@ public:
 	typedef std::vector<std::shared_ptr<TimerWheel>> WheelVec;
 	typedef std::unordered_set<TimerPtr> TimerSet;
 
-	TimerWheels(EventLoop* loop,int maxLevel=5);
+	TimerWheels(int maxLevel=5);
 	~TimerWheels(){
 		delAll();
 	}
@@ -84,16 +85,19 @@ public:
 
 	void tick();
 
+	void run();
+	void stop(){quit_ = true;}
+
 	static const size_t SlotNum = 60;//一个轮60槽，一次tick 1s
 	static const size_t TimerMax = 12960000;//150天
 
 private:
-	void addTimerInLoop(TimerPtr timer);
-	void delTimerInLoop(TimerPtr timer);
-
-	EventLoop* loop_;
+	
 	static const int levelMax_ = 4;//默认最大层数，4个时间轮
+
 	WheelVec wheelVec_;//时间轮数组
+	bool quit_;
+	Mutex mutex_;
 	//std::atomic<int> count_;
 
 	

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <math.h>
+#include <sys/wait.h>
 
 #include "muduoZ/base/Logger.h"
 #include "muduoZ/net/EventLoop.h"
@@ -103,7 +104,9 @@ void TimerWheel::runSlot(){
 		//level=0已经在最底层的轮子，level>0说明需要向下换轮子
 		//必定是在底层
 		if(level==0) {
+			
 			timer->callFunc();//最低的轮子执行
+			//timerWheels_->submitTask(timer->getFunc());
 			//如果是重复的定时器
 			if(timer->isRepeated()){
 				size_t interval = timer->getInterval();
@@ -128,7 +131,9 @@ void TimerWheel::runSlot(){
 
 ////TimerWheels
 
-TimerWheels::TimerWheels(EventLoop* loop,int maxLevel):loop_(loop){
+TimerWheels::TimerWheels(int maxLevel)
+	:quit_(true),
+	mutex_(){
 	if(maxLevel<0) {
 		//LOG<<"TimerWheels init error";
 	}
@@ -156,17 +161,16 @@ TimerPtr TimerWheels::addTimer(TimeStamp expirationTime,TimerReachFunction func,
 	int slot = (slotCur + pos.slotToAdd) % TimerWheels::SlotNum;
 
 	TimerPtr timer(new Timer(ticks,slot,pos.level,std::move(func),interval));
+
 	//addtimerinloop
-	if(!loop_->isInLoopThread()){
-		loop_->runInLoop(std::bind(&TimerWheels::addTimerInLoop,this,timer));
-	}
+	MutexLockGuard locker(mutex_);//开放给多线程的接口需要加锁
+	wheelVec_[timer->getLevel()]->addTimer(timer);
 	return timer;
 }
 
 void TimerWheels::delTimer(TimerPtr timer){
-	if(!loop_->isInLoopThread()){
-		loop_->runInLoop(std::bind(&TimerWheels::delTimerInLoop,this,timer));
-	}
+	MutexLockGuard locker(mutex_);//开放给多线程的接口需要加锁
+	wheelVec_[timer->getLevel()]->delTimer(timer);
 }
 
 //先从高到低转移timer，然后执行最底层的timer，最后从低到高tick,一次tick耗费100us
@@ -182,19 +186,22 @@ void TimerWheels::tick(){
 	}
 }
 
+void TimerWheels::run(){
+	quit_ = false;
+	while(!quit_){
+		usleep(1000);//睡眠
+		// sleep(1);
+		tick();
+	}
+}
+
+
 void TimerWheels::delAll(){
 	for(int i = 0;i<wheelVec_.size();++i){
 		wheelVec_[i]->delAll();
 	}
 }
 
-void TimerWheels::addTimerInLoop(TimerPtr timer){
-	wheelVec_[timer->getLevel()]->addTimer(timer);
-}
-
-void TimerWheels::delTimerInLoop(TimerPtr timer){
-	wheelVec_[timer->getLevel()]->delTimer(timer);
-}
 
 }
 

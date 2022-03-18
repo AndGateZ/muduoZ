@@ -6,10 +6,13 @@
 namespace muduoZ{
 
 namespace net{
+typedef std::shared_ptr<Timer> TimerPtr;
 
-EventLoopThreadPool::EventLoopThreadPool(EventLoop* baseLoop,const std::string name)
+EventLoopThreadPool::EventLoopThreadPool(EventLoop* baseLoop,const std::string name,bool timerWheel)
 	:baseLoop_(baseLoop),
-	name_(name){}
+	name_(name),
+	timerWheelsEnable_(timerWheel),
+	timerWheels_(NULL){}
 
 void EventLoopThreadPool::start(const ThreadInitCallBack &cb){
 	if(threadNum_>0){
@@ -24,6 +27,12 @@ void EventLoopThreadPool::start(const ThreadInitCallBack &cb){
 	else if(cb){
 		cb();
 	}
+
+	if(timerWheelsEnable_){
+		TimerWheelsThread* t = new TimerWheelsThread();
+		timerWheelsThread_.reset(t);
+		timerWheels_ = t->start();
+	}
 	
 }
 
@@ -34,7 +43,24 @@ EventLoop* EventLoopThreadPool::getLoop(){
 		++nextLoopIndex_;
 		if (nextLoopIndex_ >= loops_.size()) nextLoopIndex_ = 0;
 	}
-  return loop;
+	return loop;
+}
+
+
+TimerPtr EventLoopThreadPool::runAt(TimeStamp time,TimerReachFunction func){
+	return timerWheels_->addTimer(time,std::move(func),0);
+}
+
+TimerPtr EventLoopThreadPool::runAfter(size_t milliSecond,TimerReachFunction func){
+	return timerWheels_->addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),0);
+}
+
+TimerPtr EventLoopThreadPool::runEvery(size_t milliSecond,TimerReachFunction func){
+	return timerWheels_->addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),milliSecond);
+}
+
+void EventLoopThreadPool::cabcelTimer(TimerPtr timer){
+	timerWheels_->delTimer(timer);
 }
 
 }

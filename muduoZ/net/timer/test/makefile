@@ -13,12 +13,13 @@ MUDUOZ_OBJ_NET = $(MUDUOZ_DIRECTORY)/muduoZ/net
 TARGET=timeWheelTest1
 LIBS=-lpthread
 BENCHMARK=-lbenchmark
-GDB=-g
+GDB=
 
 OBJS=timeWheelTest1.o $(MUDUOZ_OBJ_NET)/Channel.o $(MUDUOZ_OBJ_NET)/Epoller.o $(MUDUOZ_OBJ_NET)/EventLoop.o $(MUDUOZ_OBJ_NET)/Socket.o \
 	$(MUDUOZ_OBJ_BASE)/Logger.o $(MUDUOZ_OBJ_BASE)/LogStream.o $(MUDUOZ_OBJ_BASE)/AsyncLogging.o \
 	$(MUDUOZ_OBJ_BASE)/Thread.o $(MUDUOZ_OBJ_BASE)/LogFile.o $(MUDUOZ_OBJ_BASE)/LogFile.o $(MUDUOZ_OBJ_BASE)/TimeStamp.o \
-	$(MUDUOZ_OBJ_NET)/timer/TimerWheel.o
+	$(MUDUOZ_OBJ_NET)/timer/TimerWheel.o $(MUDUOZ_OBJ_NET)/timer/TimerWheelsThread.o $(MUDUOZ_OBJ_NET)/EventLoopThread.o \
+	$(MUDUOZ_OBJ_NET)/EventLoopThreadPool.o 
 CXXFLAGS=-I$(MUDUOZ_INCLUDE)
 
 $(TARGET) : $(OBJS)

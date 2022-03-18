@@ -9,6 +9,7 @@
 #include "muduoZ/base/TimeStamp.h"
 #include "muduoZ/base/Logger.h"
 #include "muduoZ/net/EventLoop.h"
+#include "muduoZ/net/EventLoopThreadPool.h"
 
 using namespace std;
 using namespace muduoZ::net;
@@ -26,23 +27,23 @@ void callback(){
 	//LOG<<"call";
 }
 
-void func(EventLoop& loop){
-	while(true){
-		usleep(1000);
-		//int64_t start = get_current_time();
-		loop.runAfter(1,callback);
-		//int64_t end = get_current_time();
-		//cout<<end-start<<endl;
-	}
-	//for(int i = 0;i<1;++i) {
-	//loop.runEvery(1,callback);
-	//}
-	//loop.runAfter(1000,callback);
+void init(){
+	//LOG<<"init";
 }
 
 int main(){
-	EventLoop loop;
-	thread th(func,ref(loop));
-	loop.loop();
-	th.join();
+	EventLoop baseLoop;
+	EventLoopThreadPool pool(&baseLoop,"baseLoop",true);
+	
+	pool.start(init);
+	
+	while(true){
+		// int64_t start = get_current_time();
+		// int64_t end = get_current_time();
+		// cout<<end-start<<endl;
+		usleep(1000);
+		// sleep(1);
+		pool.runAfter(1,callback);
+	}
+
 }

@@ -7,7 +7,7 @@ namespace net{
 
 EventLoopThread::EventLoopThread(const ThreadInitCallBack &cb,const std::string &name)
 	:loop_(NULL),
-	thread_(std::bind(threadFunc,this),name),
+	thread_(std::bind(&EventLoopThread::threadFunc,this),name),
 	mutex_(),
 	cond_(mutex_),
 	cb_(cb){}

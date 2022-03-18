@@ -1,5 +1,5 @@
-#ifndef _MUDUOZ_NET_EVENTLOOPTHREAD_
-#define _MUDUOZ_NET_EVENTLOOPTHREAD_
+#ifndef _MUDUOZ_NET_EVENTLOOP_THREAD_
+#define _MUDUOZ_NET_EVENTLOOP_THREAD_
 
 #include <functional>
 #include <string>
