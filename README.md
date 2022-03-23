@@ -42,9 +42,9 @@ TimerWheels的tick()分为三个步骤：
     ![image](https://user-images.githubusercontent.com/28748767/158993021-28bb0b6c-c139-41f7-8135-2f0fff1bf197.png)  
 2. tick时间为1s  
   2.1  1ms加入一个timer，定时为1s，保持1k个timer运行  
-    ![image](https://user-images.githubusercontent.com/28748767/158993054-77e7ea52-024b-4a91-9813-8f1b23f6ec94.png)  
+    ![image](https://user-images.githubusercontent.com/28748767/159683943-0c24fe04-450f-4d66-83ad-ba5364eff49d.png)   
   2.2  10us加入一个timer，定时为1s，保持10w个timer运行   
-    ![image](https://user-images.githubusercontent.com/28748767/158993169-cb766a3e-2a83-4de1-85f1-282cae9ebf50.png)  
+    ![image](https://user-images.githubusercontent.com/28748767/159683842-22673bf0-be9f-41ec-821c-af05cbd2c2f5.png)  
 3. muduo源码中的timer测试  
   3.1  1ms加入一个timer，定时为1s，保持1k个timer运行  
     ![image](https://user-images.githubusercontent.com/28748767/158811942-324b8f36-6b64-4a35-935b-39228048264f.png)  
