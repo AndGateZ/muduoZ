@@ -1,6 +1,7 @@
 #ifndef _MUDUOZ_BASE_FIXEDBUFFER_
 #define _MUDUOZ_BASE_FIXEDBUFFER_
 
+#include <iostream>
 #include <string.h>
 #include "muduoZ/base/uncopyable.h"
 
@@ -16,6 +17,7 @@ public:
     FixedBuffer():cur_(data_){}
     ~FixedBuffer(){}
 
+	/* 固定长度buffer接口 */
     void append(const char* msg, size_t len){
         if(static_cast<int>(len) < getRemainLen()){
             //char类型的字节数就是1，无需sizeof
@@ -25,6 +27,8 @@ public:
         //这里不考虑数据超出的情况,在调用方进行截断处理
     }
 
+
+	/* 通用接口 */
     void addCurPos(size_t len){ cur_+=len;}
 
     //数据重置,<string.h>,参数是：字符串指针、赋值、长度
@@ -42,6 +46,9 @@ public:
     int getRemainLen(){ return static_cast<int>(end() - cur_);}
 
     void resetCur(){ cur_ = data_; }
+
+
+	
 
 private:
     //返回数据末尾的位置指针，这里是data_指针加整数，加的是字节数

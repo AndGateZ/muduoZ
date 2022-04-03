@@ -7,17 +7,19 @@ namespace muduoZ{
 
 namespace net{
 
+const int Epoller::InitEventsSize = 16;
+
 Epoller::Epoller(EventLoop* loop)
 	:eventLoop_(loop),
-	epollFd_(::epoll_create(EPOLL_CLOEXEC))
-	,events_(InitEventsSize){}
+	epollFd_(::epoll_create(EPOLL_CLOEXEC)),
+	events_(InitEventsSize){}
 
 Epoller::~Epoller(){
 	::close(epollFd_);
 }
 
 TimeStamp Epoller::poll(int timeout,Channels& activeChannels){
-	int nReady = ::epoll_wait(epollFd_,&events_[0],events_.size(),timeout);
+	int nReady = ::epoll_wait(epollFd_,&*events_.begin(),events_.size(),timeout);
 	for(int i = 0;i<nReady;++i){
 		Channel* channel = static_cast<Channel*>(events_[i].data.ptr);
 		channel->setActiveEvent(events_[i].events);

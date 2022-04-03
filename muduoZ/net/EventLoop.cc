@@ -96,6 +96,14 @@ void EventLoop::queueInLoop(Function function){
 
 }
 
+void EventLoop::assertInLoopThread(){
+	if(!isInLoopThread()) {
+		LOG<<"not in Loop Thread";
+		fflush(stdout);
+		abort();
+	}
+}
+
 bool EventLoop::isInLoopThread(){
 	return threadId_ == CurrentThread::tid();
 }
@@ -110,25 +118,9 @@ void EventLoop::doPendingFunctions(){
 	for(const Function& f:functions) f();
 }
 
-// TimerPtr EventLoop::runAt(TimeStamp time,TimerReachFunction func){
-// 	return timerWheels_.addTimer(time,std::move(func),0);
-// }
-
-// TimerPtr EventLoop::runAfter(size_t milliSecond,TimerReachFunction func){
-// 	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),0);
-// }
-
-// TimerPtr EventLoop::runEvery(size_t milliSecond,TimerReachFunction func){
-// 	return timerWheels_.addTimer(TimeStamp::now().addTime(milliSecond),std::move(func),milliSecond);
-// }
-
-// void EventLoop::cancelTimer(TimerPtr timer){
-
-// }
-
 void EventLoop::wakeup(){
 	uint64_t t = 0;
-	ssize_t n = Socket::write(wakeupFd_,&t,sizeof(t));
+	ssize_t n = ::write(wakeupFd_,&t,sizeof(t));
 	//muduoZ::LOG<<"wakeup write complete";
 	if(n<sizeof(t)) {
 		//muduoZ::LOG<<"wakeup failed";
@@ -141,7 +133,7 @@ void EventLoop::updateChannel(Channel* channel){
 
 void EventLoop::handleRead(){
 	uint64_t t = 0;
-	ssize_t n = Socket::read(wakeupFd_,&t,sizeof(t));
+	ssize_t n = ::read(wakeupFd_,&t,sizeof(t));
 	if(n<sizeof(t)) {
 		//log
 	}

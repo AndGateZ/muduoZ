@@ -26,7 +26,7 @@ public:
 	typedef std::shared_ptr<Timer> TimerPtr;
 	typedef std::function<void()> TimerReachFunction;
 
-	EventLoopThreadPool(EventLoop* baseLoop,const std::string name,bool timerWheel=false);
+	EventLoopThreadPool(EventLoop* baseLoop,int threadNum,const std::string name,bool timerWheel=false);
 	~EventLoopThreadPool(){}
 
 	void setThreadNum(size_t num){threadNum_ = num;}

@@ -8,11 +8,13 @@ namespace muduoZ{
 namespace net{
 typedef std::shared_ptr<Timer> TimerPtr;
 
-EventLoopThreadPool::EventLoopThreadPool(EventLoop* baseLoop,const std::string name,bool timerWheel)
+EventLoopThreadPool::EventLoopThreadPool(EventLoop* baseLoop,int threadNum,const std::string name,bool timerWheel)
 	:baseLoop_(baseLoop),
 	name_(name),
 	timerWheelsEnable_(timerWheel),
-	timerWheels_(NULL){}
+	timerWheels_(NULL),
+	threadNum_(threadNum),
+	nextLoopIndex_(0){}
 
 void EventLoopThreadPool::start(const ThreadInitCallBack &cb){
 	if(threadNum_>0){
@@ -40,7 +42,7 @@ EventLoop* EventLoopThreadPool::getLoop(){
 	EventLoop* loop = baseLoop_;
 	if (!loops_.empty()){
 		loop = loops_[nextLoopIndex_];
-		++nextLoopIndex_;
+		(++nextLoopIndex_)%threadNum_;
 		if (nextLoopIndex_ >= loops_.size()) nextLoopIndex_ = 0;
 	}
 	return loop;

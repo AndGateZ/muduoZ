@@ -13,7 +13,7 @@ TimerWheelsThread::TimerWheelsThread()
 	{}
 
 TimerWheelsThread::~TimerWheelsThread(){
-	if(thread_.running()){
+	if(timerWheels_!=NULL){
 		timerWheels_->stop();
 		thread_.join();
 	}

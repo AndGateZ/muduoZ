@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <functional>
-#include <sys/poll.h>//POLLIN 
+#include <sys/poll.h>//POLLIN
+#include <sys/epoll.h>
 
 #include "muduoZ/base/uncopyable.h"
 #include "muduoZ/base/TimeStamp.h"
@@ -45,7 +46,6 @@ public:
 	void disableReadEvent() { event_ &= ~ReadEvent; updateChannel(); }
 	void disableWriteEvent() { event_ &= ~WriteEvent; updateChannel(); }
 
-
 	//回调相关
 	void handleEvent(TimeStamp receiveTime);//loop里执行，根据事件类型执行回调，判断是否绑定，这个时间是poll返回的瞬间
 	void setCallBackRead(CallBackFunctionT f) { callBackRead_ = std::move(f);}
@@ -57,9 +57,9 @@ public:
 	//状态机相关
 	int getState() const { return state_; }
   	void setState(int state) { state_ = state; }
-	static const int CNew = -1;//channel的状态机
-	static const int CAdded = 1;
-	static const int CDeleted = 2;
+	static const int CNew;//channel的状态机
+	static const int CAdded;
+	static const int CDeleted;
 
 	//tie,与上层实体绑定
 	void tie(const std::shared_ptr<void>& obj);
@@ -82,9 +82,9 @@ private:
 	CallBackFunction callBackClose_;
 	CallBackFunction callBackError_;
 
-	static const int NoneEvent = 0;
-	static const int ReadEvent = POLLIN | POLLPRI;
-	static const int WriteEvent = POLLOUT;
+	static const int NoneEvent;
+	static const int ReadEvent;//EPOLLET为边缘触发，默认是水平触发
+	static const int WriteEvent;
 
 	
 };

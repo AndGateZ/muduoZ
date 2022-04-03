@@ -1,7 +1,7 @@
 #ifndef _MUDUOZ_NET_EPOLLER_
 #define _MUDUOZ_NET_EPOLLER_
 
-#include <sys/poll.h>//POLLIN 
+//#include <sys/poll.h>//POLLIN 
 #include <sys/epoll.h>
 #include <vector>
 
@@ -28,7 +28,7 @@ public:
 
 	//void assertInLoopThread();//有什么用？
 
-	static const int InitEventsSize = 16;//events_的初始大小
+	static const int InitEventsSize;//events_的初始大小
 private:
 	EventLoop* eventLoop_;
 	int epollFd_;

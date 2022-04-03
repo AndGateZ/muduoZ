@@ -6,7 +6,13 @@ namespace muduoZ{
 
 namespace net{
 
-class EventLoop;
+const int Channel::CNew = -1;//channel的状态机
+const int Channel::CAdded = 1;
+const int Channel::CDeleted = 2;
+
+const int Channel::NoneEvent = 0;
+const int Channel::ReadEvent = EPOLLIN | EPOLLPRI | EPOLLET;//EPOLLET为边缘触发，默认是水平触发
+const int Channel::WriteEvent = EPOLLOUT;
 
 Channel::Channel(EventLoop* loop,int fd)
 	:eventLoop_(loop),
@@ -14,7 +20,7 @@ Channel::Channel(EventLoop* loop,int fd)
 	event_(0),
 	activeEvent_(0),
 	tied_(false),
-	state_(CAdded){}
+	state_(CNew){}
 
 Channel::~Channel(){}
 
@@ -36,6 +42,8 @@ void Channel::handleEvent(TimeStamp receiveTime){
 	else{
 		handleEventWithoutGuard(receiveTime);
 	}
+	//handleEvent可能执行有销毁上层实体的回调
+	//上层实体在建立后需要tie绑定channel，在这里guard保证上层不会被析构，至少在这条语句结束后生命计数为0
 }
 
 void Channel::handleEventWithoutGuard(TimeStamp receiveTime){
@@ -65,6 +73,8 @@ void Channel::handleEventWithoutGuard(TimeStamp receiveTime){
 void Channel::updateChannel(){
 	eventLoop_->updateChannel(this);
 }
+
+
 
 }
 

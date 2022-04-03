@@ -35,14 +35,11 @@ public:
 	void quitLoop();
 	void runInLoop(Function function);
 	void queueInLoop(Function function);
+	void assertInLoopThread();
 	bool isInLoopThread();
 	void doPendingFunctions();
 
 	//定时任务
-	// TimerPtr runAt(TimeStamp time,TimerReachFunction func);
-	// TimerPtr runAfter(size_t milliSecond,TimerReachFunction func);
-	// TimerPtr runEvery(size_t milliSecond,TimerReachFunction func);
-	// void cancelTimer(TimerPtr timer);
 
 	//wakeupchannel唤醒
 	void wakeup();
@@ -55,7 +52,7 @@ private:
 
 	//poller,唯一持有
 	std::unique_ptr<Epoller> epoller_;
-	static const int kPollTimeMs = 1;
+	static const int kPollTimeMs = 1000;
 
 	//wakeup，唯一持有
 	int wakeupFd_;

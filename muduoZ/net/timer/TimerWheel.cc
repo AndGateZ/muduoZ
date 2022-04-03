@@ -189,8 +189,8 @@ void TimerWheels::tick(){
 void TimerWheels::run(){
 	quit_ = false;
 	while(!quit_){
-		usleep(1000);//睡眠
-		// sleep(1);
+		//usleep(1000);//睡眠
+		 sleep(1);
 		tick();
 	}
 }
