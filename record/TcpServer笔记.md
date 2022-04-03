@@ -15,7 +15,8 @@ ___
 潜在问题：  
 * 客户端不关闭连接造成资源浪费
 * 解决：提供强制关闭的接口，利用定时机制断开长时间连接的connection
-<br />
+<br /> 
+
 ___
 ## Connection析构  
 ![](TcpServer/Connection析构.png)
