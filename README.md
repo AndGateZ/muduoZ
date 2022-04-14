@@ -1,4 +1,4 @@
-# NetLibZ
+# High-performance TCP service framework
 基于epoll的网络编程框架，采用reactor模式，日志采用双缓冲机制，定时器采用多层时间轮，项目参考muduo、linyacool/WebServer  
 <br />
 
