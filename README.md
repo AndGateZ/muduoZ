@@ -1,4 +1,4 @@
-# NetLibZ
+# High-performance TCP service framework
 基于epoll的网络编程框架，采用reactor模式，日志采用双缓冲机制，定时器采用多层时间轮，项目参考muduo、linyacool/WebServer  
 <br />
 
@@ -25,7 +25,7 @@ ___
 再往上就涉及到对数据流进行业务处理的业务开发，例如WebHTTPSever  
   1. TcpServer-Acceptor-Connection  
   2. TcpClient-Connector  
-详见：[TcpServer笔记](/muduo/muduoZ/record/TcpServer笔记.md)
+详见：[TcpServer笔记](https://github.com/AndGateZ/muduoZ/blob/master/record/TcpServer%E7%AC%94%E8%AE%B0.md)
 <br />
 
 ### HttpServer
@@ -36,20 +36,21 @@ ___
   http响应类的封装，对请求进行业务处理后，返回响应
   3. Buffer
   connection需要有一对缓冲buffer，以便在固定的动态buffer中处理发送、接收数据，增加效率  
-  详见：[Buffer](/muduo/muduoZ/record/Buffer.md)
+  详见：[BUffer](https://github.com/AndGateZ/muduoZ/blob/master/record/Buffer.md)
 <br />
 
 ### 定时器-TimerWheels
 定时器采用多层时间轮机制，单独作为一个线程工作，以sleep作为tick来源  
 - 数据结构：数组+链表  
-详见：[时间轮](/muduo/muduoZ/record/时间轮.md)
+详见：[时间轮](https://github.com/AndGateZ/muduoZ/blob/master/record/%E6%97%B6%E9%97%B4%E8%BD%AE.md)
 
+<br />
 
 ## 压力测试
 ___
 * 压力测试工具：WebBench 1.5  
 * 测试结果：QPS：最高1.6w  
-详见：[压测分析](/muduo/muduoZ/record/压测.md)
+详见：[压测分析](https://github.com/AndGateZ/muduoZ/blob/master/record/%E5%8E%8B%E6%B5%8B.md)
 <br />
 
 如有错误，欢迎交流指正
