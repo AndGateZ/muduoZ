@@ -40,7 +40,8 @@ ___
 <br />
 
 ### 定时器-TimerWheels
-定时器采用多层时间轮机制，单独作为一个线程工作，以sleep作为tick来源  
+定时器采用多层时间轮机制，单独作为一个线程工作，以sleep作为tick来源（有bug，未来修改）  
+注意：此方案有明显bug，正确的方案应该是在工作loop中嵌入时间轮，epoll的阻塞参数作为定时触发，无需严格的tick来源，每次唤醒epollwait后处理前后时间区间内的slot即可
 - 数据结构：数组+链表  
 详见：[时间轮](https://github.com/AndGateZ/muduoZ/blob/master/record/%E6%97%B6%E9%97%B4%E8%BD%AE.md)
 
