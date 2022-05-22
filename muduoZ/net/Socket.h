@@ -33,6 +33,7 @@ public:
 	bool setReuseAddr();//地址重用,可以使用还处于TIME_WAIT状态的端口
 	bool setReusePort();//端口重用,服务器可以同时建立多个用于监听的socket，每个socket绑定的地址端口都相同，内核会采用负载均衡的方法将每个将每个客户端请求分配给某一个socket，可以很大程序的提高并发性，充分利用CPU资源
 	bool setKeepAlive();//
+	bool setNoDelay();
 
 private:
 	const int fd_;

@@ -25,6 +25,7 @@ Connection::Connection(EventLoop* loop,int sockFd,std::string name)
 	channel_.setCallBackClose(std::bind(&Connection::handleClose,this));
 	channel_.setCallBackError(std::bind(&Connection::handleError,this));
 	connSock_.setKeepAlive();
+	// connSock_.setNoDelay();//禁用Nagle算法
 }
 
 void Connection::send(const char* msg, int len){

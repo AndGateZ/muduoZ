@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h> //read write
 #include <sys/uio.h>  // readv
+#include <netinet/tcp.h>  // nodelay
 
 #include "muduoZ/net/Socket.h"
 
@@ -116,6 +117,13 @@ bool Socket::setKeepAlive()
  	if( ::setsockopt(fd_, SOL_SOCKET, SO_KEEPALIVE, &on, static_cast<socklen_t>(sizeof on)) < 0) return false;
 	return true;
 }
+
+bool Socket::setNoDelay(){
+	int on = 1;
+ 	if( ::setsockopt(fd_, IPPROTO_TCP, TCP_NODELAY, &on, static_cast<socklen_t>(sizeof on)) < 0) return false;
+	return true;
+}
+
 }
 
 }

@@ -186,6 +186,7 @@ void TimerWheels::tick(){
 	}
 }
 
+//这里不应该用sleep,因为任务函数的执行时间会造成误差，应该用tventloop+timerFd来获取tick来源
 void TimerWheels::run(){
 	quit_ = false;
 	while(!quit_){

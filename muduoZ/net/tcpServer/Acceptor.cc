@@ -15,6 +15,9 @@ Acceptor::Acceptor(EventLoop* loop,int port)
 	acceptChannel_(loop,acceptorSocket_.getFd()),
 	idleFd_(::open("/dev/null", O_RDONLY | O_CLOEXEC))
 {
+	// if(acceptorSocket_.setNoDelay()==false){
+	// 	LOG<<"Acceptor setReuseAddr error";//禁用Nagle算法
+	// }
 	if(acceptorSocket_.setReuseAddr()==false){
 		LOG<<"Acceptor setReuseAddr error";//地址重用，可以使用还处于TIME_WAIT状态的端口
 	}

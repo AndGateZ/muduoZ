@@ -36,7 +36,7 @@ ___
   http响应类的封装，对请求进行业务处理后，返回响应
   3. Buffer
   connection需要有一对缓冲buffer，以便在固定的动态buffer中处理发送、接收数据，增加效率  
-  详见：[BUffer](/muduo/muduoZ/record/Buffer.md)
+  详见：[Buffer](/muduo/muduoZ/record/Buffer.md)
 <br />
 
 ### 定时器-TimerWheels
